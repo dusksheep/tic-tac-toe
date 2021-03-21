@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>tic-tac-toe</title>
+  <meta name="description" content="tic-tac-toe game for Odin Project JS course">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <h1 class="textCenter">Welcome to the frenchie tic-tac-toe</h1>
+  <h2 class="textCenter">Select your dog</h2>
+  <div class="centerDiv" id="playerSelector">
+    <div id="divPlayerTheMonster">
+      <img class="picture" id="theMonsterImg" src="the-monster.jpeg" alt="ugly frenchie bulldog">
+      <input type="radio" id="theMonster" name="inputPlayerselector">the monster</input>
+    </div>
+    <div id="divPlayerTheLovelyPig">
+      <img class="picture" id="theLovelyPigImg" src="the-lovely-pig.jpeg" alt="lovely frenchie bulldog">
+      <input type="radio" id="theLovelyPigImput" name="inputPlayerselector">the lovely pig</input>
+      </div>
+  </div>
+  <button id="btnNewGame">Neo Game</button>
+  
+  <div id="grid">
+    
+      <div id="square00" class="gridSquare"></div>
+      <div id="square10" class="gridSquare"></div>
+      <div id="square20" class="gridSquare"></div>
+      <div id="square01" class="gridSquare"></div>
+      <div id="square11" class="gridSquare"></div>
+      <div id="square21" class="gridSquare"></div>
+      <div id="square02" class="gridSquare"></div>
+      <div id="square12" class="gridSquare"></div>
+      <div id="square22" class="gridSquare"></div>
+
+    
+  </div>
+      
+      <script src="app.js" async defer></script>
+</body>
+
+</html>
