@@ -4,11 +4,8 @@
     return { name, img, symbol }
   }
 
-  const squareFactory = (targetSquare, playerMark, isWinner) => {
-    return { targetSquare, playerMark, isWinner }
-  }
- 
 
+ 
 
   const variables = (() => {
     let gameBoard = ["","","","","","","","",""];
@@ -20,71 +17,58 @@
     let isTurn;
     
     
-    return {boardFrames, gameBoard, newButton, theLovelyPig, theMonster, isTurn};      
+    return {boardFrames, gameBoard, newButton, theLovelyPig, theMonster, isTurn, };      
   })();
 
 
 
-
-const gameMechanisms = (() => {
+  const gameMechanisms = (() => {
   
-  const checkWinner = () => {
+    const checkWinner = () => {
     const winConditions = [[0,1,2], [3,4,5], [6,7,8], [0,3,6], [1,4,7], [2,5,8], [0,4,8], [2,4,6]];
-    let isWinner = false;
-    let checkedSquare = "";
-
-    // need to solve this check winner thing
+    
     winConditions.forEach((condition) => {
-      if(variables.gameBoard[condition[0]] === "x") {
-
-        condition.forEach((squareIndex) => {
-          checkedSymbol = variables.gameBoard[condition[0]];
-          console.log("checked symbol " + checkedSymbol)
-          if(checkedSquare === variables.gameBoard[squareIndex]) {
-            isWinner = true;  
+      if(variables.gameBoard[condition[0]]) {    
+          if(variables.gameBoard[condition[0]] === variables.gameBoard[condition[1]] 
+          && variables.gameBoard[condition[0]] === variables.gameBoard[condition[2]]) {
+            alert(`The ${variables.isTurn} won the game`);
             } else {
-              isWinner = false;
-            };
-            
-        });
-        console.log("we have a winner " + isWinner);
-      }
-      
-  });
-  
-};
+            };    
+      };   
+    }); 
+  };
 
-  const getPlayerSymbol = () => {
-    if(variables.isTurn == variables.theLovelyPig.name) { 
-      variables.isTurn = variables.theMonster.name
-      return variables.theMonster.symbol;
-    } else {
+    const getPlayerSymbol = () => {
+      if(variables.isTurn == variables.theLovelyPig.name) { 
+        variables.isTurn = variables.theMonster.name
+        return variables.theMonster.symbol;
+      } else {
         variables.isTurn = variables.theLovelyPig.name
         return variables.theLovelyPig.symbol;
-      }
-    }
+      };
+    };
 
-  const isEmpty = () => {
-    return varibles.gameBoard.every(element => !element);
-  }
+    const isEmpty = () => {
+      return varibles.gameBoard.every(element => !element);
+    };
 
-  const isFull = () => {
-    return varibles.gameBoard.every(element => element);
-  }
+    const isFull = () => {
+      return varibles.gameBoard.every(element => element);
+    };
 
-  const getAvaliableMoves = () => {
-    let avaliableSquares = [];
-    variables.gameBoard.forEach((element, index) => {
-      if(!element) {
+    const getAvaliableMoves = () => {
+      let avaliableSquares = [];
+      variables.gameBoard.forEach((element, index) => {
+        if(!element) {
         avaliableSquares.push(element);
-      }
-    })
-    return avaliableSquares;
-  }
+      };
+    });
+      return avaliableSquares;
+    };
 
-  const printBoard = () => {
-    let boardString = "";
-    variables.gameBoard.forEach((element, index) => {
+    const printBoard = () => {
+      let boardString = "";
+      variables.gameBoard.forEach((element, index) => {
       boardString += element ? ` ${element} |` : `   |`;
       if((index + 1) % 3 == 0) { 
         boardString = boardString.slice(0,-1);
@@ -97,9 +81,12 @@ const gameMechanisms = (() => {
     };
 
     const setGameBoard = (index) => {
-      variables.gameBoard.splice(index, 1, getPlayerSymbol());
-      checkWinner();
-    }
+      if(!(variables.gameBoard[index])) {
+        variables.gameBoard.splice(index, 1, getPlayerSymbol());
+        graphics.renderArray();
+        checkWinner();
+      };
+    };
 
     variables.boardFrames.forEach((element, index) => {
       element.addEventListener("click", function() {setGameBoard(index)});
@@ -111,7 +98,35 @@ const gameMechanisms = (() => {
     return {getPlayerSymbol, isEmpty, printBoard, getAvaliableMoves, isFull};
   })();
 
+  const graphics = (() => {
+    
+    const getImgFromSymbol = (symbol) => {
+      if(symbol) {
+        if (symbol === "x") {
+          return variables.theLovelyPig.img;
+        } else {
+          return variables.theMonster.img;
+        }
+      }
+      return "";
+    }
+    
+    const renderArray = () => {
+      variables.gameBoard.forEach((element, index) => {
+        variables.boardFrames[index].innerHTML = getImgFromSymbol(element);
+        console.log(variables.boardFrames[index].innerHTML = getImgFromSymbol(element));
+      });
+
+    }
+
+
+
+    return {renderArray}
+  })();
+
 })();
+
+
   
 
 
