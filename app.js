@@ -22,21 +22,27 @@
     const cleanVariables = () => {
       variables.gameBoard = ["", "", "", "", "", "", "", "", ""];
       graphics.renderArray();
+      
     }
     
     const checkWinner = () => {
       const winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
+      const isFull = (element) => element != "";
+      const winnerName = variables.isTurn == variables.theLovelyPig.name ? "the Monster" : "the Lovely Pig"
       winConditions.forEach((condition) => {
         if (variables.gameBoard[condition[0]]) {
           if (variables.gameBoard[condition[0]] === variables.gameBoard[condition[1]]
             && variables.gameBoard[condition[0]] === variables.gameBoard[condition[2]]) {
-            alert(`The ${variables.isTurn} won the game`);
+            alert(`The ${winnerName} won the game`);
             cleanVariables();
             variables.gG = true;
-          } else {
-          };
         };
-      });
+      };
+    });
+    if (variables.gameBoard.every(isFull)) {
+      alert(`Drawn`);
+      cleanVariables();
+    }
     };
 
     const getPlayerSymbol = () => {
@@ -53,9 +59,7 @@
       return varibles.gameBoard.every(element => !element);
     };
 
-    const isFull = () => {
-      return varibles.gameBoard.every(element => element);
-    };
+   
 
     const getAvaliableMoves = () => {
       let avaliableSquares = [];
@@ -81,11 +85,13 @@
       console.log(boardString);
     };
 
-    const getMachineTurn = () => {
+    const getMachineTurn = (e) => {
       let availableSquares = getAvaliableMoves();
       let index = Math.floor(Math.random() * availableSquares.length);
+      
       if(!(variables.gG)) {
         setGameBoard(availableSquares[index])};
+        variables.gG = false;
     }
 
     const setGameBoard = (index) => {
@@ -97,6 +103,7 @@
     };
 
     const selectPlayers = () => {
+      cleanVariables();
       const setTheLovelyPigasPlayer1 = () => {
         variables.isTurn = variables.theLovelyPig.name;
         variables.theLovelyPig.playerType = "human";
@@ -113,15 +120,29 @@
       setTheLovelyPigasPlayer1() : setTheMonsterAsPlayer1();
     };
 
+    
+
     variables.boardFrames.forEach((element, index) => {
-      element.addEventListener("click", function () { setGameBoard(index) });
-      element.addEventListener("click", getMachineTurn);
-      element.addEventListener("click", printBoard);
+      element.addEventListener("click", function (e) { 
+        setGameBoard(index);
+        e.preventDefault();
+        e.stopPropagation() }, {once: true});
+      
+      element.addEventListener("click", function (e) {
+        getMachineTurn();
+        e.preventDefault();
+        e.stopPropagation()}, {once: true});
+     
+        element.addEventListener("click", function (e) {
+        printBoard();
+        e.preventDefault();
+        e.stopPropagation()}, {once: true});
+   
     });
     variables.newButton.addEventListener("click", selectPlayers);
 
 
-    return { getPlayerSymbol, isEmpty, printBoard, getAvaliableMoves, isFull };
+    return { getPlayerSymbol, isEmpty, printBoard, getAvaliableMoves };
   })();
 
 
@@ -140,6 +161,7 @@
     const renderArray = () => {
       variables.gameBoard.forEach((element, index) => {
         variables.boardFrames[index].innerHTML = getImgFromSymbol(element);
+       
         
       });
     }
