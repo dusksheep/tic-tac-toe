@@ -20,8 +20,12 @@
 
   const gameMechanisms = (() => {
     const cleanVariables = () => {
+      refreshEvents();
       variables.gameBoard = ["", "", "", "", "", "", "", "", ""];
       graphics.renderArray();
+      variables.gG = false;
+      selectPlayers();
+      
       
     }
     
@@ -34,8 +38,9 @@
           if (variables.gameBoard[condition[0]] === variables.gameBoard[condition[1]]
             && variables.gameBoard[condition[0]] === variables.gameBoard[condition[2]]) {
             alert(`The ${winnerName} won the game`);
-            cleanVariables();
             variables.gG = true;
+            cleanVariables();
+            
         };
       };
     });
@@ -85,7 +90,7 @@
       console.log(boardString);
     };
 
-    const getMachineTurn = (e) => {
+    const getMachineTurn = () => {
       let availableSquares = getAvaliableMoves();
       let index = Math.floor(Math.random() * availableSquares.length);
       
@@ -103,7 +108,8 @@
     };
 
     const selectPlayers = () => {
-      cleanVariables();
+      
+      
       const setTheLovelyPigasPlayer1 = () => {
         variables.isTurn = variables.theLovelyPig.name;
         variables.theLovelyPig.playerType = "human";
@@ -119,28 +125,25 @@
       variables.theLovelyPigInput.checked === true ? 
       setTheLovelyPigasPlayer1() : setTheMonsterAsPlayer1();
     };
-
-    
-
-    variables.boardFrames.forEach((element, index) => {
-      element.addEventListener("click", function (e) { 
-        setGameBoard(index);
-        e.preventDefault();
-        e.stopPropagation() }, {once: true});
       
-      element.addEventListener("click", function (e) {
-        getMachineTurn();
-        e.preventDefault();
-        e.stopPropagation()}, {once: true});
-     
-        element.addEventListener("click", function (e) {
-        printBoard();
-        e.preventDefault();
-        e.stopPropagation()}, {once: true});
-   
-    });
-    variables.newButton.addEventListener("click", selectPlayers);
-
+    variables.boardFrames.forEach((element, index) => { 
+      element.addEventListener("click", function boardSetting () {setGameBoard(index)});     
+      
+    });    
+    
+    const refreshEvents = () => {
+      variables.boardFrames.forEach((element) => { 
+        element.removeEventListener("click", getMachineTurn);
+        element.removeEventListener("click", printBoard);
+      });
+      variables.boardFrames.forEach((element) => {
+        element.addEventListener("click", getMachineTurn, {once:true});
+        element.addEventListener("click", printBoard, {once:true});
+      })
+    }
+    variables.newButton.addEventListener("click", cleanVariables );
+    variables.newButton.addEventListener("click", selectPlayers );
+    
 
     return { getPlayerSymbol, isEmpty, printBoard, getAvaliableMoves };
   })();
