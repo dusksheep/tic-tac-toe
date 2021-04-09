@@ -1,6 +1,6 @@
 
 (() => {
-  
+
   const playerFactory = (name, img, symbol, playerType) => {
     return { name, img, symbol, playerType }
   }
@@ -20,34 +20,39 @@
 
   const gameMechanisms = (() => {
     const cleanVariables = () => {
+
       refreshEvents();
       variables.gameBoard = ["", "", "", "", "", "", "", "", ""];
       graphics.renderArray();
       variables.gG = false;
       selectPlayers();
-      
-      
+
+
     }
-    
+
     const checkWinner = () => {
       const winConditions = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]];
       const isFull = (element) => element != "";
       const winnerName = variables.isTurn == variables.theLovelyPig.name ? "the Monster" : "the Lovely Pig"
+      let winnerSymbol = "-2";
       winConditions.forEach((condition) => {
         if (variables.gameBoard[condition[0]]) {
           if (variables.gameBoard[condition[0]] === variables.gameBoard[condition[1]]
             && variables.gameBoard[condition[0]] === variables.gameBoard[condition[2]]) {
             alert(`The ${winnerName} won the game`);
             variables.gG = true;
-            cleanVariables();
+            winnerSymbol = variables.gameBoard[condition[0]];
             
+            cleanVariables();
+            return {"winner": winnerSymbol};
+          };
         };
-      };
-    });
-    if (variables.gameBoard.every(isFull)) {
-      alert(`Drawn`);
-      cleanVariables();
-    }
+      });
+      if (variables.gameBoard.every(isFull)) {
+        alert(`Drawn`);
+        cleanVariables();
+      }
+      return {"winner": winnerSymbol};
     };
 
     const getPlayerSymbol = () => {
@@ -64,7 +69,7 @@
       return varibles.gameBoard.every(element => !element);
     };
 
-   
+
 
     const getAvaliableMoves = () => {
       let avaliableSquares = [];
@@ -87,16 +92,19 @@
           }
         };
       });
+      console.log(checkWinner().winner);
       console.log(boardString);
+      
     };
 
     const getMachineTurn = () => {
       let availableSquares = getAvaliableMoves();
       let index = Math.floor(Math.random() * availableSquares.length);
-      
-      if(!(variables.gG)) {
-        setGameBoard(availableSquares[index])};
-        variables.gG = false;
+
+      if (!(variables.gG)) {
+        setGameBoard(availableSquares[index])
+      };
+      variables.gG = false;
     }
 
     const setGameBoard = (index) => {
@@ -108,8 +116,8 @@
     };
 
     const selectPlayers = () => {
-      
-      
+
+
       const setTheLovelyPigasPlayer1 = () => {
         variables.isTurn = variables.theLovelyPig.name;
         variables.theLovelyPig.playerType = "human";
@@ -122,28 +130,29 @@
         variables.theLovelyPig.playerType = "machine";
       }
 
-      variables.theLovelyPigInput.checked === true ? 
-      setTheLovelyPigasPlayer1() : setTheMonsterAsPlayer1();
+      variables.theLovelyPigInput.checked === true ?
+        setTheLovelyPigasPlayer1() : setTheMonsterAsPlayer1();
     };
-      
-    variables.boardFrames.forEach((element, index) => { 
-      element.addEventListener("click", function boardSetting () {setGameBoard(index)});     
-      
-    });    
-    
+
+    variables.boardFrames.forEach((element, index) => {
+      element.addEventListener("click", function boardSetting() { setGameBoard(index) });
+
+    });
+
     const refreshEvents = () => {
-      variables.boardFrames.forEach((element) => { 
+      variables.boardFrames.forEach((element) => {
         element.removeEventListener("click", getMachineTurn);
         element.removeEventListener("click", printBoard);
       });
       variables.boardFrames.forEach((element) => {
-        element.addEventListener("click", getMachineTurn, {once:true});
-        element.addEventListener("click", printBoard, {once:true});
+        element.addEventListener("click", getMachineTurn, { once: true });
+        element.addEventListener("click", printBoard, { once: true });
       })
     }
-    variables.newButton.addEventListener("click", cleanVariables );
-    variables.newButton.addEventListener("click", selectPlayers );
-    
+    variables.newButton.addEventListener("click", cleanVariables);
+    variables.newButton.addEventListener("click", selectPlayers);
+
+   
 
     return { getPlayerSymbol, isEmpty, printBoard, getAvaliableMoves };
   })();
@@ -164,11 +173,11 @@
     const renderArray = () => {
       variables.gameBoard.forEach((element, index) => {
         variables.boardFrames[index].innerHTML = getImgFromSymbol(element);
-       
-        
+
+
       });
     }
     return { renderArray }
   })();
-  
+
 })();
